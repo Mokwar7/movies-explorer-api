@@ -1,6 +1,8 @@
 const Movie = require('../models/movie');
 const { SUCCESS_CODE, CREATE_CODE } = require('../utils/codes');
 const NotCorrectDataError = require('../utils/notCorrectDataError');
+const NotFindError = require('../utils/notFindError');
+const NotAccesError = require('../utils/notAccesError');
 
 module.exports.getAllMovies = (req, res, next) => {
   Movie.find({})
@@ -28,14 +30,15 @@ module.exports.createMovie = (req, res, next) => {
 module.exports.deleteMovie = (req, res, next) => {
   const { movieId } = req.body;
 
-  Movie.findByIdAndDelete({ movieId })
-    .then((result) => {
-      res.status(SUCCESS_CODE).send({ data: result });
-    })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new NotCorrectDataError('Data validation error'));
+  Movie.findOne({ movieId })
+    .orFail(() => new NotFindError('Card is not found'))
+    .then((movie) => {
+      if (movie.owner.valueOf() === req.user._id) {
+        next(new NotAccesError('Это не ваш фильм.'));
       }
-      next(err);
-    });
+      Movie.deleteOne(movie)
+        .then((result) => res.send(result))
+        .catch(next);
+    })
+    .catch(next);
 };
