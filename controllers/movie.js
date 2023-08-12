@@ -31,7 +31,7 @@ module.exports.deleteMovie = (req, res, next) => {
   const { movieId } = req.body;
 
   Movie.findOne({ movieId })
-    .orFail(() => new NotFindError('Card is not found'))
+    .orFail(() => new NotFindError('Movie is not found'))
     .then((movie) => {
       if (movie.owner.valueOf() === req.user._id) {
         next(new NotAccesError('Это не ваш фильм.'));
