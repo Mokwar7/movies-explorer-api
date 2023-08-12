@@ -6,6 +6,7 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const { SUCCESS_CODE, CREATE_CODE } = require('../utils/codes');
 const NotCorrectDataError = require('../utils/notCorrectDataError');
 const NotCorrectTokenError = require('../utils/notCorrectTokenError');
+const NotUniqError = require('../utils/notUniqError');
 
 module.exports.getMyInfo = (req, res, next) => {
   User.findById(req.user._id)
@@ -50,6 +51,9 @@ module.exports.register = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'ValidationError' || err.name === 'CastError') {
             next(new NotCorrectDataError('Data validation error'));
+          }
+          if (err.code === 11000) {
+            next(new NotUniqError('Данный email уже зарегистрирован'));
           }
           next(err);
         });
