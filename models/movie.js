@@ -24,14 +24,35 @@ const movieSchema = new mongoose.Schema({
   image: {
     type: String,
     require: true,
+    validate: {
+      validator: (data) => {
+        const regex = /^(http|ftp|https)?(\:\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^!=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])+$/gmi; // eslint-disable-line no-useless-escape
+        return regex.test(data);
+      },
+      message: 'Это не ссылка',
+    },
   },
   trailerLink: {
     type: String,
     require: true,
+    validate: {
+      validator: (data) => {
+        const regex = /^(http|ftp|https)?(\:\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^!=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])+$/gmi; // eslint-disable-line no-useless-escape
+        return regex.test(data);
+      },
+      message: 'Это не ссылка',
+    },
   },
   thumbnail: {
     type: String,
     require: true,
+    validate: {
+      validator: (data) => {
+        const regex = /^(http|ftp|https)?(\:\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^!=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])+$/gmi; // eslint-disable-line no-useless-escape
+        return regex.test(data);
+      },
+      message: 'Это не ссылка',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

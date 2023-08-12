@@ -5,7 +5,7 @@ const NotFindError = require('../utils/notFindError');
 const NotAccesError = require('../utils/notAccesError');
 
 module.exports.getAllMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => {
       res.status(SUCCESS_CODE).send({ data: movies });
     })
@@ -35,6 +35,7 @@ module.exports.deleteMovie = (req, res, next) => {
     .then((movie) => {
       if (movie.owner.valueOf() === req.user._id) {
         next(new NotAccesError('Это не ваш фильм.'));
+        return;
       }
       Movie.deleteOne(movie)
         .then((result) => res.send(result))

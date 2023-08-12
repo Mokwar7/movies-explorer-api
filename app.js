@@ -18,7 +18,7 @@ const { register, login } = require('./controllers/user');
 
 const NotFindError = require('./utils/notFindError');
 
-mongoose.connect('mongodb://0.0.0.0:27017/moviesExplorerDB', {
+mongoose.connect('mongodb://0.0.0.0:27017/bitfilmsdb', {
   useNewUrlParser: true,
 })
   .then(() => {
@@ -47,8 +47,7 @@ app.post('/signin', celebrate({
 
 app.use(auth);
 
-app.use('/users', require('./routes/user'));
-app.use('/movies', require('./routes/movie'));
+app.use(require('./routes/index'));
 
 app.use('*', (req, res, next) => {
   next(new NotFindError('Данная страница не найдена'));

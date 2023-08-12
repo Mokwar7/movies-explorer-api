@@ -35,6 +35,9 @@ module.exports.updateMyInfo = (req, res, next) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
         next(new NotCorrectDataError('Data validation error'));
       }
+      if (err.code === 11000) {
+        next(new NotUniqError('Данный email уже зарегистрирован'));
+      }
       next(err);
     });
 };
@@ -46,7 +49,7 @@ module.exports.register = (req, res, next) => {
     .then((hash) => {
       User.create({ name, email, password: hash })
         .then((dataUser) => {
-          res.status(CREATE_CODE).send({ data: dataUser });
+          res.status(CREATE_CODE).send({ name: dataUser.name, email: dataUser.email });
         })
         .catch((err) => {
           if (err.name === 'ValidationError' || err.name === 'CastError') {
