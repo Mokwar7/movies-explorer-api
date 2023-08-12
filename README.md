@@ -1,2 +1,3 @@
 # movies-explorer-api
-sdfsdsfdsfd
+Api 158.160.116.9
+Backend https://api.eivom.nomoreparties.co/
