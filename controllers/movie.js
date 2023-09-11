@@ -28,15 +28,12 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  const { movieId } = req.body;
+  const movieId  = req.params.id;
+  const owner = req.user._id;
 
-  Movie.findOne({ movieId })
+  Movie.findOne({ movieId, owner })
     .orFail(() => new NotFindError('Movie is not found'))
     .then((movie) => {
-      if (movie.owner.valueOf() === req.user._id) {
-        next(new NotAccesError('Это не ваш фильм.'));
-        return;
-      }
       Movie.deleteOne(movie)
         .then((result) => res.send(result))
         .catch(next);
