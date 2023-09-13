@@ -22,9 +22,9 @@ module.exports.getMyInfo = (req, res, next) => {
 };
 
 module.exports.updateMyInfo = (req, res, next) => {
-  const { name, email } = req.body;
+  const { name } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, email }, {
+  User.findByIdAndUpdate(req.user._id, { name }, {
     new: true,
     runValidators: true,
   })
